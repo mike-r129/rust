@@ -100,7 +100,9 @@ where
         ret.cast_to(Uniform::new(Reg::i64(), size));
     } else {
         ret.make_indirect();
-        *offset += cx.data_layout().pointer_size();
+        // The hidden return pointer occupies a whole argument slot, which is 64
+        // bits wide even on n32, where pointers are 32 bits.
+        *offset += Reg::i64().size;
     }
 }
 
@@ -141,7 +143,8 @@ where
     } else if let Some(component) = arg.layout.complex_number(cx)
         && !matches!(component, Numeric::Float(Float::F16))
     {
-        let slot = dl.pointer_size();
+        // Argument slots are 64 bits wide, also on n32 where pointers are 32 bits.
+        let slot = Reg::i64().size;
         let curr_offset = offset.align_to(align);
 
         const NUM_ARG_SLOTS: u64 = 8;
