@@ -125,7 +125,14 @@ where
         // padding floats with floats and integers with integers.
         // However, this implementation is consistent with GCC, which means we
         // are compatible with the de-facto ABI on the platform.
-        if let BackendRepr::Scalar(scalar) = arg.layout.backend_repr {
+        //
+        // Only cast when padding is actually needed. The cast replaces
+        // `PassMode::Direct` and with it the `signext`/`zeroext` attribute that
+        // `extend_integer_width_mips` just set, and the MIPS64 ABIs require the
+        // caller to extend integers narrower than 64 bits to the full register.
+        if pad_i32 != 0
+            && let BackendRepr::Scalar(scalar) = arg.layout.backend_repr
+        {
             let kind = RegKind::from_primitive(scalar.primitive());
             arg.cast_to_and_pad_i32(CastTarget::from(Reg { kind, size }), pad_i32);
         }

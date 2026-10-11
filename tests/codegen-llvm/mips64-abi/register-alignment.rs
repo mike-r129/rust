@@ -16,18 +16,18 @@
 extern crate minicore;
 use minicore::*;
 
-// CHECK: @i128_gets_aligned(i8 %0, i32 %1, i128 %2)
+// CHECK: @i128_gets_aligned(i8 noundef zeroext %arg0, i32 %0, i128 %1)
 #[no_mangle]
 extern "C" fn i128_gets_aligned(arg0: u8, arg1: i128) {}
 
-// CHECK: @i128_is_aligned(i8 %0, i16 %1, i128 %2)
+// CHECK: @i128_is_aligned(i8 noundef zeroext %arg0, i16 noundef signext %arg1, i128 noundef %arg2)
 #[no_mangle]
 extern "C" fn i128_is_aligned(arg0: u8, arg1: i16, arg2: i128) {}
 
-// CHECK: @f128_gets_aligned(i8 %0, i32 %1, fp128 %2)
+// CHECK: @f128_gets_aligned(i8 noundef zeroext %arg0, i32 %0, fp128 %1)
 #[no_mangle]
 extern "C" fn f128_gets_aligned(arg0: u8, arg1: f128) {}
 
-// CHECK: @f128_is_aligned(i8 %0, float %1, fp128 %2)
+// CHECK: @f128_is_aligned(i8 noundef zeroext %arg0, float noundef %arg1, fp128 noundef %arg2)
 #[no_mangle]
 extern "C" fn f128_is_aligned(arg0: u8, arg1: f32, arg2: f128) {}
